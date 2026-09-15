@@ -1,0 +1,59 @@
+{
+  "name": "pi-qqbot",
+  "version": "0.1.0",
+  "description": "Mirror a live pi coding-agent session to a QQ private chat (official QQ Bot API).",
+  "type": "module",
+  "license": "MIT",
+  "author": "0x5c0f",
+  "homepage": "https://github.com/0x5c0f/pi-qqbot#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/0x5c0f/pi-qqbot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/0x5c0f/pi-qqbot/issues"
+  },
+  "keywords": [
+    "pi-package",
+    "pi",
+    "pi-extension",
+    "qq",
+    "qqbot",
+    "qq-bot",
+    "chatbot",
+    "coding-agent"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "index.ts",
+    "core.ts",
+    "config.ts",
+    "state.ts",
+    "lock.ts",
+    "log.ts",
+    "pi-qqbot.example.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "pi": {
+    "extensions": [
+      "./index.ts"
+    ]
+  },
+  "scripts": {
+    "test": "node --test test/core.test.ts test/state.test.ts test/lock.test.ts && node test/load-harness.mjs && node test/flow-harness.mjs && node test/bind-harness.mjs && node test/setup-harness.mjs",
+    "test:unit": "node --test test/core.test.ts test/state.test.ts test/lock.test.ts",
+    "test:load": "node test/load-harness.mjs",
+    "test:flow": "node test/flow-harness.mjs",
+    "test:bind": "node test/bind-harness.mjs",
+    "test:setup": "node test/setup-harness.mjs"
+  },
+  "dependencies": {
+    "@tencent-connect/qqbot-nodejs": "^1.0.4"
+  },
+  "devDependencies": {
+    "jiti": "^2.0.0"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "appId": "YOUR_QQBOT_APP_ID",
+  "appSecret": "YOUR_QQBOT_APP_SECRET",
+  "markdownSupport": false,
+  "allowFrom": [],
+  "debounceMs": 1200,
+  "maxChunkChars": 4500,
+  "forwardTerminal": true,
+  "showToolTrace": false,
+  "allowGroup": false,
+  "autoConnect": false
+}

@@ -1,0 +1,15 @@
+# Dependencies
+node_modules/
+
+# Runtime state that must never be committed
+pi-qqbot.json
+pi-qqbot.state.json
+pi-qqbot.lock
+pi-qqbot.json.bak-*
+pi-qqbot.log
+logs/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.swp
