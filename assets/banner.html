@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1280px; height: 640px; overflow: hidden; }
+  body {
+    font-family: "Noto Sans CJK SC", "Noto Sans CJK", system-ui, sans-serif;
+    background: #0a0e14;
+    color: #e6edf3;
+    position: relative;
+  }
+  .glow {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(720px 380px at 12% 0%, rgba(18,183,245,0.20), transparent 60%),
+      radial-gradient(680px 360px at 100% 100%, rgba(61,220,151,0.16), transparent 62%);
+  }
+  .grid {
+    position: absolute; inset: 0; opacity: 0.35;
+    background-image: linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  .wrap { position: relative; padding: 56px 64px; height: 100%; display: flex; flex-direction: column; }
+  .top { display: flex; align-items: center; justify-content: space-between; }
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .mark {
+    width: 46px; height: 46px; border-radius: 13px;
+    background: linear-gradient(135deg, #12b7f5, #3ddc97);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 19px; color: #04121a;
+  }
+  .brand-name { font-size: 24px; font-weight: 700; letter-spacing: 0.2px; }
+  .badges { display: flex; gap: 10px; }
+  .badge {
+    font-size: 13px; color: #9fb0c3; border: 1px solid #223043;
+    background: rgba(17,24,35,0.7); padding: 6px 12px; border-radius: 999px;
+    font-family: "DejaVu Sans Mono", monospace;
+  }
+  h1 {
+    margin-top: 46px; font-size: 58px; line-height: 1.08; font-weight: 800; letter-spacing: -0.5px;
+    background: linear-gradient(92deg, #ffffff 20%, #9fe6ff 60%, #7cf0bd 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .sub { margin-top: 16px; font-size: 21px; color: #93a2b5; }
+  .sub b { color: #cfdcea; font-weight: 600; }
+  .flow { margin-top: 34px; display: flex; align-items: center; gap: 18px; }
+  .node {
+    flex: 0 0 auto; padding: 14px 22px; border-radius: 14px;
+    border: 1px solid #223043; background: rgba(17,24,35,0.85);
+    font-size: 17px; color: #cfe0f0;
+  }
+  .node .k { color: #7ddcff; font-family: "DejaVu Sans Mono", monospace; }
+  .node .g { color: #7cf0bd; font-family: "DejaVu Sans Mono", monospace; }
+  .arrow { color: #3ddc97; font-size: 22px; }
+  .features { margin-top: 30px; display: flex; flex-wrap: wrap; gap: 10px; }
+  .chip {
+    font-size: 15px; color: #a9bccd; border: 1px solid #1d2a39;
+    background: rgba(15,22,32,0.8); padding: 8px 14px; border-radius: 999px;
+  }
+  .chip b { color: #7cf0bd; font-weight: 600; }
+  .cmd {
+    margin-top: auto; display: flex; align-items: center; gap: 12px;
+    border: 1px solid #223043; background: #0e1621; border-radius: 12px;
+    padding: 14px 18px; font-family: "DejaVu Sans Mono", monospace; font-size: 17px;
+  }
+  .dot { width: 11px; height: 11px; border-radius: 50%; }
+  .cmd .prompt { color: #3ddc97; }
+  .cmd .txt { color: #d7e3ef; }
+  .cmd .txt i { color: #12b7f5; font-style: normal; }
+</style>
+</head>
+<body>
+  <div class="glow"></div>
+  <div class="grid"></div>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+        <div class="mark">QQ</div>
+        <div class="brand-name">pi-qqbot</div>
+      </div>
+      <div class="badges">
+        <div class="badge">MIT</div>
+        <div class="badge">pi-package</div>
+        <div class="badge">official QQ Bot API</div>
+      </div>
+    </div>
+
+    <h1>Mirror your pi session to QQ</h1>
+    <div class="sub">终端 <b>↔</b> QQ 双向同步 · 思维链与工具调用<b>不出本机</b></div>
+
+    <div class="flow">
+      <div class="node"><span class="k">终端</span> pi</div>
+      <div class="arrow">⇄</div>
+      <div class="node">pi-qqbot</div>
+      <div class="arrow">⇄</div>
+      <div class="node"><span class="g">QQ</span> 私聊</div>
+    </div>
+
+    <div class="features">
+      <div class="chip">双向同步</div>
+      <div class="chip"><b>thinking</b> 不外发</div>
+      <div class="chip">工具调用不刷屏</div>
+      <div class="chip">被动额度预警</div>
+      <div class="chip">单实例锁</div>
+      <div class="chip">官方 QQ Bot SDK</div>
+    </div>
+
+    <div class="cmd">
+      <span class="dot" style="background:#ff5f57"></span>
+      <span class="dot" style="background:#febc2e"></span>
+      <span class="dot" style="background:#28c840"></span>
+      <span class="prompt" style="margin-left:8px">$</span>
+      <span class="txt">pi install <i>git:github.com/0x5c0f/pi-qqbot</i></span>
+    </div>
+  </div>
+</body>
+</html>

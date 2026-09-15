@@ -1,5 +1,11 @@
 # pi-qqbot
 
+<p align="center">
+  <img src="./assets/pi-qqbot.png" alt="pi-qqbot" width="100%" />
+</p>
+
+[English](./README.en.md) | **简体中文**
+
 把**正在运行的 [pi](https://pi.dev) 会话**镜像到一个 QQ 私聊：终端与 QQ 双向同步。
 
 > Mirror a live pi coding-agent session to a QQ private chat, using the official

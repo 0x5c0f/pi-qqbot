@@ -35,12 +35,14 @@
     "log.ts",
     "pi-qqbot.example.json",
     "README.md",
+    "README.en.md",
     "LICENSE"
   ],
   "pi": {
     "extensions": [
       "./index.ts"
-    ]
+    ],
+    "image": "https://raw.githubusercontent.com/0x5c0f/pi-qqbot/main/assets/pi-qqbot.png"
   },
   "scripts": {
     "test": "node --test test/core.test.ts test/state.test.ts test/lock.test.ts && node test/load-harness.mjs && node test/flow-harness.mjs && node test/bind-harness.mjs && node test/setup-harness.mjs",
@@ -48,7 +50,8 @@
     "test:load": "node test/load-harness.mjs",
     "test:flow": "node test/flow-harness.mjs",
     "test:bind": "node test/bind-harness.mjs",
-    "test:setup": "node test/setup-harness.mjs"
+    "test:setup": "node test/setup-harness.mjs",
+    "prepublishOnly": "npm test"
   },
   "dependencies": {
     "@tencent-connect/qqbot-nodejs": "^1.0.4"
