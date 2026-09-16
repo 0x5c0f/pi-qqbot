@@ -47,7 +47,7 @@ pi install git:github.com/0x5c0f/pi-qqbot@v0.1.0
 若已发布到 npm：
 
 ```bash
-pi install npm:pi-qqbot
+pi install npm:@0x5c0f/pi-qqbot
 ```
 
 项目内安装（`.pi/`）加 `-l`：

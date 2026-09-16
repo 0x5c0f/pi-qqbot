@@ -44,7 +44,7 @@ Or via SSH / npm (once published):
 
 ```bash
 pi install git:git@github.com:0x5c0f/pi-qqbot
-pi install npm:pi-qqbot
+pi install npm:@0x5c0f/pi-qqbot
 ```
 
 Project-local install (`.pi/`):
