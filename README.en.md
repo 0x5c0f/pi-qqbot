@@ -16,7 +16,7 @@ Transport is the official Tencent SDK [`@tencent-connect/qqbot-nodejs`](https://
 - **Terminal mirrored too**: what you type in the terminal is forwarded to QQ.
 - **No reasoning leak**: only assistant `text` blocks are sent; `thinking` is never forwarded.
 - **No spam**: tool calls are hidden from QQ by default.
-- **Oversize-safe**: debounced coalescing plus chunking to QQ's per-message limit.
+- **Oversize-safe and quota-friendly**: by default **one consolidated message per turn** (chunked only when long), so QQ's passive-reply quota is kept for the final answer.
 - **Budget-aware**: warns in the terminal when QQ's passive-reply budget runs low or out.
 - **Single-instance lock**: only one pi process holds the QQ connection at a time.
 - **Manual connect by default**: `autoConnect: false`, so no pi process grabs the bot by accident.
@@ -92,7 +92,8 @@ Switching terminals: run `/qq-disconnect` in the old instance, then `/qq-connect
   "forwardTerminal": true,
   "showToolTrace": false,
   "allowGroup": false,
-  "autoConnect": false
+  "autoConnect": false,
+  "streamIntermediate": false
 }
 ```
 
@@ -107,6 +108,7 @@ Switching terminals: run `/qq-disconnect` in the old instance, then `/qq-connect
 | `showToolTrace` | `false` | Prefix the next message with called tool names |
 | `allowGroup` | `false` | Also accept group @ messages |
 | `autoConnect` | `false` | Connect automatically on pi startup. `false` = use `/qq-connect` |
+| `streamIntermediate` | `false` | Send assistant messages as they arrive. Default `false` = one consolidated message per turn |
 
 Environment overrides: `PI_QQBOT_CONFIG`, `PI_QQBOT_LOG`, `PI_QQBOT_STATE`, `PI_QQBOT_LOCK`.
 
@@ -122,7 +124,7 @@ Three sync directions:
 
 - **No reasoning leak**: only `text` blocks are extracted; `thinking` / `toolCall` blocks are excluded by construction.
 - **Tool calls hidden**: `showToolTrace` is off by default; while tools run, QQ only shows its native "typing" indicator (no message).
-- **Debounce + chunk**: avoids notification storms and oversize failures.
+- **One consolidated message per turn (default)**: all visible assistant text in a turn is accumulated and sent when the turn settles (`agent_settled`), chunked only if long. This typically costs 1–2 passive replies, so the quota is not wasted on intermediate commentary and the final answer is not lost to quota exhaustion. Set `streamIntermediate: true` for per-message real-time output.
 - **Passive-reply budget**: a QQ C2C inbound message allows at most **4 passive replies per 60 minutes** (groups: 5 / 5 min). After that, replies fall back to proactive messages (rate-limited, may be intercepted). The terminal warns when 1 reply remains or the budget is exhausted — send any QQ message to refresh.
 - **Single-instance lock**: `~/.pi/agent/pi-qqbot.lock`. If a live pi holds it, a second instance refuses to connect and reports the holder PID; stale locks from crashed processes are reclaimed automatically.
 - **No history migration**: only the reply target (`scope` / `targetId` / `msgId`) is persisted — **no chat content**. Connecting a different pi session to QQ does not inject QQ history into it, so context stays clean. Use pi's own `/resume` if you want continuity.
@@ -174,7 +176,7 @@ assets/                gallery banner (source HTML + PNG)
 
 - **C2C private chat, single owner** only. Group support needs mention gating and multi-session isolation; `allowGroup` is off by default.
 - Text mirroring only — no local file/image sending.
-- No streaming typewriter (uses debounced coalescing; the official `stream_messages` API is C2C-only and could be a future enhancement).
+- No streaming typewriter (default is per-turn consolidation; `streamIntermediate: true` restores per-message output; the official `stream_messages` API is C2C-only and could be a future enhancement).
 
 ## License
 

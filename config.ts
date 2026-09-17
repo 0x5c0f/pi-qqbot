@@ -24,6 +24,8 @@ export interface QQBotConfig {
 	allowGroup: boolean;
 	/** Connect automatically on session start. Off = connect via /qq-connect. */
 	autoConnect: boolean;
+	/** Send assistant messages as they arrive (may exhaust QQ's passive reply quota). Off = one consolidated message per turn. */
+	streamIntermediate: boolean;
 }
 
 export type LoadResult =
@@ -71,6 +73,7 @@ export function normalizeConfig(raw: unknown, filePath = configPath()): LoadResu
 		showToolTrace: r.showToolTrace === true,
 		allowGroup: r.allowGroup === true,
 		autoConnect: r.autoConnect === true,
+		streamIntermediate: r.streamIntermediate === true,
 	};
 
 	return { ok: true, config, path: filePath };
@@ -136,6 +139,7 @@ export function ensureExampleConfig(filePath = configPath()): { created: boolean
 		showToolTrace: false,
 		allowGroup: false,
 		autoConnect: false,
+		streamIntermediate: false,
 	};
 	try {
 		fs.mkdirSync(path.dirname(filePath), { recursive: true });

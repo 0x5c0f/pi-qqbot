@@ -109,6 +109,20 @@ await send("agent_settled", {});
 assert.equal(bot.sent.at(-1).content, "after tool", "tool trace must be omitted when disabled");
 console.log("ok  tool calls are not shown in QQ (showToolTrace=false)");
 
+// Default (streamIntermediate=false): assistant output is held until the turn
+// settles, then delivered as ONE consolidated message. This keeps the final
+// answer inside QQ's 4-passive-reply quota instead of burning it on commentary.
+await send("agent_start", {});
+const beforeFinal = bot.sent.length;
+await send("message_end", { message: { role: "assistant", content: [{ type: "text", text: "第一段解说" }] } });
+assert.equal(bot.sent.length, beforeFinal, "no mid-turn send by default");
+await send("message_end", { message: { role: "assistant", content: [{ type: "text", text: "最终答案" }] } });
+assert.equal(bot.sent.length, beforeFinal, "still nothing before settle");
+await send("agent_settled", {});
+assert.equal(bot.sent.length, beforeFinal + 1, "exactly one consolidated send per turn");
+assert.equal(bot.sent.at(-1).content, "第一段解说\n\n最终答案");
+console.log("ok  final-only: one consolidated message per turn (default)");
+
 // Clean shutdown so the lock watchdog interval is cleared.
 await send("session_shutdown", { reason: "quit" });
 assert.ok(bot.stopped, "session_shutdown should stop the transport");

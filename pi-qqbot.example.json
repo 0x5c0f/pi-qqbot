@@ -8,5 +8,6 @@
   "forwardTerminal": true,
   "showToolTrace": false,
   "allowGroup": false,
-  "autoConnect": false
+  "autoConnect": false,
+  "streamIntermediate": false
 }

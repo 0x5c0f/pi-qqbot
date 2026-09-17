@@ -33,6 +33,7 @@ writeFileSync(
 		showToolTrace: true,
 		allowGroup: false,
 		autoConnect: true,
+		streamIntermediate: true,
 	}),
 );
 

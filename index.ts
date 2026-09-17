@@ -67,7 +67,7 @@ export default function (pi: ExtensionAPI): void {
 	let outCount = 0;
 	let lastError: string | undefined;
 
-	function notify(message: string, level: "info" | "error" = "info"): void {
+	function notify(message: string, level: "info" | "warning" | "error" = "info"): void {
 		try {
 			ctxRef?.ui.notify(message, level);
 		} catch {
@@ -299,11 +299,11 @@ export default function (pi: ExtensionAPI): void {
 		}
 		if (level === "exhausted") {
 			notify(
-				"pi-qqbot: QQ 被动回复额度已用尽，后续消息改走主动消息（可能被 QQ 拦截）。请在 QQ 里发一条消息刷新额度。",
-				"error",
+				"pi-qqbot: QQ 被动回复额度已用尽，本条改走主动消息（可能被 QQ 拦截）。在 QQ 里发一条消息即可刷新额度。",
+				"warning",
 			);
 		} else {
-			notify("pi-qqbot: QQ 被动回复额度仅剩 1 次，建议在 QQ 里发一条消息刷新。", "info");
+			notify("pi-qqbot: QQ 被动回复额度仅剩 1 次，建议在 QQ 里发一条消息刷新。", "warning");
 		}
 	}
 
@@ -395,6 +395,8 @@ export default function (pi: ExtensionAPI): void {
 
 	pi.on("agent_start", async () => {
 		busy = true;
+		pendingText = [];
+		pendingTools = [];
 	});
 
 	pi.on("agent_settled", async () => {
@@ -417,9 +419,14 @@ export default function (pi: ExtensionAPI): void {
 			const text = extractText(message.content).trim();
 			if (!text) return; // tool-only / thinking-only message: nothing to mirror
 			pendingText.push(text);
-			debouncer.schedule(() => {
-				void flush();
-			});
+			// Default: hold assistant output until the turn settles, so the final
+			// answer is what consumes QQ's scarce passive-reply quota instead of
+			// intermediate commentary. Opt into streaming with streamIntermediate.
+			if (cfg?.streamIntermediate) {
+				debouncer.schedule(() => {
+					void flush();
+				});
+			}
 			return;
 		}
 

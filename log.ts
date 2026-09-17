@@ -22,7 +22,8 @@ export function logLine(...parts: unknown[]): void {
 		}
 		const rendered = parts
 			.map((p) => (typeof p === "string" ? p : JSON.stringify(p)))
-			.join(" ");
+			.join(" ")
+			.replace(/\r?\n/g, " ⏎ ");
 		// Logs may contain message previews: keep the file private (0600).
 		fs.appendFileSync(LOG_PATH, `[${new Date().toISOString()}] ${rendered}\n`, { mode: 0o600 });
 		if (!existed) {

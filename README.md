@@ -20,7 +20,7 @@
 - **终端也同步**：你在终端里输入的内容会镜像到 QQ。
 - **不泄漏思维链**：只发 assistant 的可见文本，`thinking` 永不外发。
 - **不刷屏**：工具调用默认不显示到 QQ。
-- **抗超长**：去抖合并 + 按 QQ 上限分片。
+- **抗超长 + 省配额**：默认**每个回合只发一条**（超长再分片），把 QQ 的被动回复配额留给最终答案。
 - **额度感知**：接近/用尽 QQ 被动回复额度时在终端预警。
 - **单实例锁**：同一时刻只有一个 pi 连着 QQ。
 - **默认手动连接**：`autoConnect: false`，不随手抢占机器人。
@@ -95,7 +95,8 @@ pi install -l git:github.com/0x5c0f/pi-qqbot
   "forwardTerminal": true,
   "showToolTrace": false,
   "allowGroup": false,
-  "autoConnect": false
+  "autoConnect": false,
+  "streamIntermediate": false
 }
 ```
 
@@ -110,6 +111,7 @@ pi install -l git:github.com/0x5c0f/pi-qqbot
 | `showToolTrace` | `false` | 是否在下一条消息前附上工具名 |
 | `allowGroup` | `false` | 是否接受群聊 @（默认关闭） |
 | `autoConnect` | `false` | 是否在 pi 启动时自动连接。`false` = 需手动 `/qq-connect` |
+| `streamIntermediate` | `false` | 是否把助手的中间消息实时逐条发出。默认 `false` = 每个回合合并成一条 |
 
 环境变量覆盖：`PI_QQBOT_CONFIG`、`PI_QQBOT_LOG`、`PI_QQBOT_STATE`、`PI_QQBOT_LOCK`。
 
@@ -125,8 +127,8 @@ pi install -l git:github.com/0x5c0f/pi-qqbot
 
 - **思维链不外发**：只取 assistant 内容里的 `text` 块，`thinking` / `toolCall` 天然被排除。
 - **工具调用不显示**：`showToolTrace` 默认关闭；工具执行期间仅用 QQ「输入中」提示（不发消息）。
-- **去抖合并 + 分片**：避免通知轰炸与超长失败。
-- **被动回复额度**：QQ 单聊每条入站消息最多被动回复 **4 次 / 60 分钟**（群聊 5 次 / 5 分钟）。用尽后自动降级为主动消息（受额度限制，可能被拦截）。额度剩 1 次或用尽时会在终端提示，提醒你在 QQ 发一条消息刷新。
+- **默认每回合一条**：一个 agent 回合里的所有可见文本会累积到回合结束（`agent_settled`）再合并发送（超长按上限分片）。这样通常只消耗 1~2 次被动回复，不会把配额浪费在过程碎语上、也不会因配额耗尽而丢失最终答案。想要实时逐条，设 `streamIntermediate: true`。
+- **被动回复额度**：QQ 单聊每条入站消息最多被动回复 **4 次 / 60 分钟**（群聊 5 次 / 5 分钟）。用尽后自动降级为主动消息（受额度限制，可能被拦截）。额度剩 1 次或用尽时会在终端以 warning 提示，提醒你在 QQ 发一条消息刷新。
 - **单实例锁**：连接前抢 `~/.pi/agent/pi-qqbot.lock`；另一存活的 pi 持有时会拒绝连接并提示 PID；持锁进程崩溃后锁自动回收。
 - **会话切换不迁移历史**：扩展只持久化「回复目标」（`scope` / `targetId` / `msgId`），**不保存任何聊天内容**。因此换一个 pi 会话连接 QQ 时，QQ 的历史记录**不会**注入新会话，上下文保持干净。想延续上下文请用 pi 自己的 `/resume`。
 
@@ -176,7 +178,7 @@ test/                  单元测试 + 离线 harness
 
 - 只支持 **单聊 C2C + 单 owner**；群聊需要 mention 判定与多会话隔离，`allowGroup` 默认关闭。
 - 只做文本镜像，不发送本地文件/图片。
-- 不做流式打字机（采用「去抖合并」；官方 `stream_messages` 仅 C2C，可作为后续增强）。
+- 不做流式打字机（默认「回合末合并」；`streamIntermediate: true` 可恢复逐条实时；官方 `stream_messages` 仅 C2C，可作为后续增强）。
 
 ## License
 
